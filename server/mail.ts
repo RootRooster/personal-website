@@ -55,7 +55,7 @@ export async function sendContactEmail(data: {
 
 // Notify all subscribers about a new blog post
 export async function sendNewPostNotification(
-  subscribers: { email: string }[],
+  subscribers: { email: string; unsubscribe_token: string }[],
   post: { id: number; title: string; excerpt: string },
   siteUrl: string,
 ) {
@@ -65,10 +65,11 @@ export async function sendNewPostNotification(
   const excerpt = esc(post.excerpt);
   const postUrl = `${esc(siteUrl)}/blog/${post.id}`;
 
-  // Send individually so each person gets their own email
+  // Send individually so each person gets their own unsubscribe link
   const results = await Promise.allSettled(
-    subscribers.map((sub) =>
-      resend.emails.send({
+    subscribers.map((sub) => {
+      const unsubUrl = `${siteUrl}/api/unsubscribe/${sub.unsubscribe_token}`;
+      return resend.emails.send({
         from: FROM,
         to: sub.email,
         replyTo: REPLY_TO,
@@ -82,10 +83,11 @@ export async function sendNewPostNotification(
             </a>
             <hr style="border: none; border-top: 1px solid #eee; margin: 32px 0 16px;" />
             <p style="color: #999; font-size: 12px;">You're receiving this because you subscribed at pro.nikcadez.com</p>
+            <p style="color: #999; font-size: 12px;"><a href="${unsubUrl}" style="color: #999; text-decoration: underline;">Unsubscribe</a></p>
           </div>
         `,
-      })
-    )
+      });
+    })
   );
 
   const failed = results.filter((r) => r.status === 'rejected').length;

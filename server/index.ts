@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import crypto from 'crypto';
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
@@ -266,7 +267,7 @@ app.post('/api/blogs', requireAdmin, async (req, res) => {
     audit('blog_created', `id: ${created.id}, title: ${title}`, req, (req as any).user.userId);
 
     // Notify subscribers in the background
-    const subscribers = db.prepare('SELECT email FROM subscribers').all() as { email: string }[];
+    const subscribers = db.prepare('SELECT email, unsubscribe_token FROM subscribers').all() as { email: string; unsubscribe_token: string }[];
     const siteUrl = process.env.APP_URL || 'http://localhost:3000';
     sendNewPostNotification(subscribers, { id: created.id, title, excerpt }, siteUrl).catch((err) =>
       console.error('Newsletter send error:', err)
@@ -339,8 +340,9 @@ app.get('/api/subscribers', requireAdmin, (_req, res) => {
 app.post('/api/subscribers', subscribeLimiter, (req, res) => {
   try {
     const email = validateEmail(req.body.email);
-    const result = db.prepare('INSERT INTO subscribers (email) VALUES (?)').run(email);
-    const created = db.prepare('SELECT * FROM subscribers WHERE id = ?').get(result.lastInsertRowid);
+    const unsubscribeToken = crypto.randomBytes(32).toString('hex');
+    const result = db.prepare('INSERT INTO subscribers (email, unsubscribe_token) VALUES (?, ?)').run(email, unsubscribeToken);
+    const created = db.prepare('SELECT id, email, created_at FROM subscribers WHERE id = ?').get(result.lastInsertRowid);
     res.status(201).json(created);
   } catch (err: any) {
     if (err.code === 'SQLITE_CONSTRAINT_UNIQUE') {
@@ -353,6 +355,45 @@ app.post('/api/subscribers', subscribeLimiter, (req, res) => {
 app.delete('/api/subscribers/:id', requireAdmin, (req, res) => {
   db.prepare('DELETE FROM subscribers WHERE id = ?').run(req.params.id);
   res.json({ success: true });
+});
+
+// GET shows a confirmation page (prevents email link scanners from auto-unsubscribing)
+app.get('/api/unsubscribe/:token', (req, res) => {
+  const sub: any = db.prepare('SELECT id FROM subscribers WHERE unsubscribe_token = ?').get(req.params.token);
+  res.setHeader('Content-Type', 'text/html');
+  if (!sub) {
+    return res.send(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Unsubscribe</title></head>
+      <body style="font-family:sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#111;color:#fff;">
+      <p>This link is invalid or you have already been unsubscribed.</p></body></html>`);
+  }
+  res.send(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Unsubscribe</title></head>
+    <body style="font-family:sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#111;color:#fff;">
+    <div style="text-align:center;">
+      <h2>Unsubscribe from nikcadez.com</h2>
+      <p style="color:#aaa;">Are you sure you want to stop receiving new post notifications?</p>
+      <form method="POST" action="/api/unsubscribe/${req.params.token}">
+        <button type="submit" style="margin-top:16px;padding:12px 32px;background:#4b8eff;color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:bold;cursor:pointer;">
+          Confirm Unsubscribe
+        </button>
+      </form>
+    </div></body></html>`);
+});
+
+// POST performs the actual unsubscribe
+app.post('/api/unsubscribe/:token', (req, res) => {
+  const result = db.prepare('DELETE FROM subscribers WHERE unsubscribe_token = ?').run(req.params.token);
+  res.setHeader('Content-Type', 'text/html');
+  if (result.changes > 0) {
+    audit('subscriber_unsubscribed', `token: ${req.params.token.substring(0, 8)}...`, req);
+  }
+  // Always show success to prevent token enumeration
+  res.send(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Unsubscribed</title></head>
+    <body style="font-family:sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#111;color:#fff;">
+    <div style="text-align:center;">
+      <h2>You have been unsubscribed</h2>
+      <p style="color:#aaa;">You will no longer receive email notifications.</p>
+      <a href="/" style="display:inline-block;margin-top:16px;color:#4b8eff;text-decoration:none;font-weight:bold;">Back to nikcadez.com</a>
+    </div></body></html>`);
 });
 
 // ─── CONTACT ─────────────────────────────────────────────

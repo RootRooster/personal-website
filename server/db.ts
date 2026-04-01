@@ -95,4 +95,7 @@ db.exec(`
 try { db.exec('ALTER TABLE audit_log ADD COLUMN user_agent TEXT'); } catch {}
 try { db.exec('ALTER TABLE audit_log ADD COLUMN request_path TEXT'); } catch {}
 
+// Add unsubscribe token to subscribers (safe for existing databases)
+try { db.exec('ALTER TABLE subscribers ADD COLUMN unsubscribe_token TEXT'); } catch {}
+
 export default db;
