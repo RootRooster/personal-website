@@ -3,9 +3,9 @@ import 'dotenv/config';
 
 const resend = new Resend(process.env.RESEND_KEY);
 
-const FROM = process.env.MAIL_FROM || 'Nik.Pro <blog@nikcadez.com>';
+const FROM = process.env.MAIL_FROM || 'nikcadez.com <blog@nikcadez.com>';
 const REPLY_TO = process.env.MAIL_REPLY_TO || 'gmail@nikcadez.com';
-const CONTACT_FROM = process.env.MAIL_CONTACT_FROM || 'Nik.Pro Contact <contact.me@nikcadez.com>';
+const CONTACT_FROM = process.env.MAIL_CONTACT_FROM || 'nikcadez.com Contact <contact.me@nikcadez.com>';
 const CONTACT_TO = process.env.MAIL_CONTACT_TO || 'gmail@nikcadez.com';
 
 // Strip control characters that could allow email header injection
