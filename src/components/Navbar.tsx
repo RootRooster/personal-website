@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Mail, User, Menu, X, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../lib/utils';
+import { getCurrentUser } from '../lib/api';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -61,9 +62,15 @@ export default function Navbar() {
           <button onClick={handleCopyEmail} className="text-primary hover:text-primary/80 transition-colors relative" title="Copy email">
             {mailCopied ? <Check size={24} /> : <Mail size={24} />}
           </button>
-          <button onClick={() => navigate('/login')} className="text-primary hover:text-primary/80 transition-colors" title="Login">
-            <User size={24} />
-          </button>
+          {getCurrentUser() ? (
+            <button onClick={() => navigate('/profile')} className="w-8 h-8 rounded-full bg-primary/15 flex items-center justify-center text-primary text-xs font-black uppercase hover:bg-primary/25 transition-colors" title="Profile">
+              {getCurrentUser()!.username[0]}
+            </button>
+          ) : (
+            <button onClick={() => navigate('/login')} className="text-primary hover:text-primary/80 transition-colors" title="Login">
+              <User size={24} />
+            </button>
+          )}
           <button
             className="md:hidden text-primary"
             onClick={() => setIsOpen(!isOpen)}

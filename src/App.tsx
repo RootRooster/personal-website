@@ -8,6 +8,7 @@ import BlogPostPage from './pages/BlogPostPage';
 import ContactPage from './pages/ContactPage';
 import WorkPage from './pages/WorkPage';
 import AdminPage from './pages/AdminPage';
+import ProfilePage from './pages/ProfilePage';
 import RegisterPage from './pages/RegisterPage';
 import LavaLampBackground from './components/LavaLampBackground';
 
@@ -26,6 +27,7 @@ export default function App() {
             <Route path="/blog/:id" element={<BlogPostPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/login" element={<AdminPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/register" element={<RegisterPage />} />
           </Routes>
         </main>
