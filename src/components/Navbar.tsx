@@ -38,7 +38,7 @@ export default function Navbar() {
     <header className="fixed top-0 w-full z-50 bg-[#131313]/60 backdrop-blur-2xl border-b border-outline-variant/15">
       <nav className="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">
         <Link to="/" className="text-2xl font-black tracking-tighter text-on-surface hover:text-primary transition-colors">
-          NIK.PRO
+          NIKCADEZ
         </Link>
 
         {/* Desktop Nav */}
