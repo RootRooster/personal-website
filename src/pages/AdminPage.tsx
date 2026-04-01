@@ -157,7 +157,6 @@ export default function AdminPage() {
     try {
       const result = await login(username, password);
       if (!result.isAdmin) {
-        logout();
         navigate('/blog');
         return;
       }
