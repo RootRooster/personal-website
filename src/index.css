@@ -1,0 +1,191 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-background: #131313;
+  --color-surface: #1f1f1f;
+  --color-primary: #adc6ff;
+  --color-primary-container: #4b8eff;
+  --color-secondary: #ffb786;
+  --color-on-surface: #e2e2e2;
+  --color-on-surface-variant: #c1c6d7;
+  --color-outline-variant: #414755;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-on-surface font-sans antialiased;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-[#353535]/30 backdrop-blur-2xl border border-outline-variant/15;
+  }
+  
+  .refractive-edge {
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .obsidian-gradient {
+    background: radial-gradient(circle at 50% -20%, #1f1f1f 0%, #131313 100%);
+  }
+}
+
+/* ─── Markdown body ──────────────────────────────────── */
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4 {
+  @apply text-on-surface font-black tracking-tight;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+.markdown-body h1 { @apply text-4xl; }
+.markdown-body h2 { @apply text-3xl; }
+.markdown-body h3 { @apply text-2xl; }
+.markdown-body h4 { @apply text-xl; }
+
+.markdown-body p {
+  @apply text-on-surface-variant leading-relaxed;
+  margin-bottom: 1.25rem;
+}
+
+.markdown-body a {
+  @apply text-primary underline underline-offset-4 decoration-primary/40 hover:decoration-primary transition-colors;
+}
+
+.markdown-body strong {
+  @apply text-on-surface font-bold;
+}
+
+.markdown-body em {
+  @apply text-on-surface-variant/90 italic;
+}
+
+/* Inline code — only direct children of p, li, td, etc. (not inside code blocks) */
+.markdown-body :not(.code-block-wrapper) > code,
+.markdown-body p > code,
+.markdown-body li > code,
+.markdown-body td > code,
+.markdown-body th > code {
+  @apply text-primary text-[0.9em] font-mono px-2 py-0.5 rounded-lg;
+  background: rgba(173, 198, 255, 0.08);
+  border: 1px solid rgba(173, 198, 255, 0.12);
+}
+
+/* Strip any background/border from code inside highlighted blocks */
+.code-block-wrapper code {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+/* Fenced code blocks — glass-panel style */
+.markdown-body pre {
+  @apply rounded-2xl p-6 my-8 overflow-x-auto font-mono text-sm leading-relaxed;
+  background: rgba(53, 53, 53, 0.3);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(65, 71, 85, 0.25);
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.06),
+    0 4px 24px -4px rgba(0, 0, 0, 0.4);
+}
+
+.markdown-body pre code {
+  @apply text-on-surface-variant/90 p-0 text-[0.85rem];
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Syntax-highlighted code block wrapper */
+.code-block-wrapper {
+  @apply rounded-2xl overflow-hidden;
+  background: rgba(53, 53, 53, 0.3);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(65, 71, 85, 0.25);
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.06),
+    0 4px 24px -4px rgba(0, 0, 0, 0.4);
+}
+
+.code-block-header {
+  @apply flex items-center justify-between px-5 py-2.5;
+  border-bottom: 1px solid rgba(65, 71, 85, 0.2);
+  background: rgba(173, 198, 255, 0.03);
+}
+
+.code-block-lang {
+  @apply text-[10px] font-black uppercase tracking-[2px] text-primary/60;
+}
+
+.code-block-copy {
+  @apply flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider
+         text-on-surface-variant/40 hover:text-primary/80 transition-colors
+         px-2.5 py-1 rounded-lg;
+}
+.code-block-copy:hover {
+  background: rgba(173, 198, 255, 0.06);
+}
+
+/* Lists */
+.markdown-body ul {
+  @apply list-disc pl-6 space-y-2 my-4 text-on-surface-variant;
+}
+.markdown-body ol {
+  @apply list-decimal pl-6 space-y-2 my-4 text-on-surface-variant;
+}
+.markdown-body li {
+  @apply leading-relaxed;
+}
+.markdown-body li::marker {
+  @apply text-primary/60;
+}
+
+/* Blockquotes */
+.markdown-body blockquote {
+  @apply my-8 pl-6 py-4 italic text-on-surface-variant/80;
+  border-left: 3px solid rgba(173, 198, 255, 0.3);
+  background: rgba(53, 53, 53, 0.15);
+  border-radius: 0 1rem 1rem 0;
+}
+
+/* Horizontal rules */
+.markdown-body hr {
+  @apply my-12 border-none h-px;
+  background: linear-gradient(90deg, transparent, rgba(65, 71, 85, 0.5), transparent);
+}
+
+/* Tables */
+.markdown-body table {
+  @apply w-full my-8 text-sm overflow-hidden rounded-2xl;
+  background: rgba(53, 53, 53, 0.2);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(65, 71, 85, 0.25);
+}
+.markdown-body thead {
+  @apply text-on-surface font-bold text-xs uppercase tracking-widest;
+  background: rgba(173, 198, 255, 0.06);
+}
+.markdown-body th {
+  @apply px-5 py-3 text-left;
+  border-bottom: 1px solid rgba(65, 71, 85, 0.3);
+}
+.markdown-body td {
+  @apply px-5 py-3 text-on-surface-variant;
+  border-bottom: 1px solid rgba(65, 71, 85, 0.12);
+}
+.markdown-body tr:last-child td {
+  border-bottom: none;
+}
+
+/* Images inside markdown */
+.markdown-body img {
+  @apply rounded-2xl my-8 border border-outline-variant/20;
+}
