@@ -2,7 +2,7 @@
 
 Personal portfolio and blog platform. React + Express + SQLite, deployed via Docker on a Raspberry Pi behind Cloudflare Tunnel.
 
-**Live:** [pro.nikcadez.com](https://pro.nikcadez.com)
+**Live:** [nikcadez.com](https://nikcadez.com)
 
 ## Tech Stack
 

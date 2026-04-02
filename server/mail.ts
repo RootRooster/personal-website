@@ -82,7 +82,7 @@ export async function sendNewPostNotification(
               Read Article
             </a>
             <hr style="border: none; border-top: 1px solid #eee; margin: 32px 0 16px;" />
-            <p style="color: #999; font-size: 12px;">You're receiving this because you subscribed at pro.nikcadez.com</p>
+            <p style="color: #999; font-size: 12px;">You're receiving this because you subscribed at nikcadez.com</p>
             <p style="color: #999; font-size: 12px;"><a href="${unsubUrl}" style="color: #999; text-decoration: underline;">Unsubscribe</a></p>
           </div>
         `,

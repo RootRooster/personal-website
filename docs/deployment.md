@@ -18,7 +18,7 @@ Docker container (nikpro)
   v
 cloudflared (system service)
   |-- Connects to Cloudflare edge
-  |-- Routes pro.nikcadez.com -> localhost:3001
+  |-- Routes nikcadez.com -> localhost:3001
   v
 Cloudflare (TLS, CDN, DDoS protection)
   |
@@ -63,7 +63,7 @@ The runner runs as a systemd service and starts on boot.
 
 `cloudflared` runs as a system service on the RPi. It was configured via the Cloudflare Zero Trust dashboard:
 
-- **Public hostname:** `pro.nikcadez.com`
+- **Public hostname:** `nikcadez.com`
 - **Service:** `http://localhost:3001`
 
 No ports need to be opened on the router. The tunnel creates an outbound-only connection.

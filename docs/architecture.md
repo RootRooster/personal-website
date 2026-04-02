@@ -40,7 +40,7 @@ Resend API (transactional email)
 
 ## Request Flow
 
-1. User visits `https://pro.nikcadez.com`
+1. User visits `https://nikcadez.com`
 2. Cloudflare terminates TLS at the edge and routes through the tunnel
 3. `cloudflared` on the RPi forwards the request to `localhost:3001`
 4. Express serves the React SPA for page routes, or handles `/api/*` requests
