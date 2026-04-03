@@ -30,7 +30,7 @@ export default function ExperiencePage() {
             <div className="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000" />
             <div className="relative w-64 h-64 rounded-full overflow-hidden border border-outline-variant/30">
               <img 
-                src="/uploads/hero-portrait.png" 
+                src="/uploads/hero-portrait.jpeg" 
                 alt="Nik Cadez Professional Portrait"
                 className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
                 referrerPolicy="no-referrer"
